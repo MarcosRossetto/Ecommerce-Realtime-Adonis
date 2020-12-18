@@ -20,4 +20,4 @@ class PasswordReset extends Model {
   }
 }
 
-module.exports = PasswordReset
+export default PasswordReset
