@@ -9,7 +9,7 @@ class Category extends Model {
   }
 
   products() {
-    return this.belongsToMany('App/ModelsProduct')
+    return this.belongsToMany('App/Models/Product')
   }
 }
 
