@@ -17,8 +17,11 @@ const providers = [
   '@adonisjs/cors/providers/CorsProvider',
   '@adonisjs/lucid/providers/LucidProvider',
   '@adonisjs/mail/providers/MailProvider',
+<<<<<<< HEAD
   '@adonisjs/validator/providers/ValidatorProvider',
   '@adonisjs/websocket/providers/WsProvider',
+=======
+>>>>>>> parent of 41bc0b3... validator packege added
 ]
 
 /*
