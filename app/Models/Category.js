@@ -13,4 +13,4 @@ class Category extends Model {
   }
 }
 
-export default Category
+module.exports = Category

@@ -55,4 +55,4 @@ class User extends Model {
   }
 }
 
-export default User
+module.exports = User

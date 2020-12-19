@@ -21,4 +21,4 @@ class Coupon extends Model {
   }
 }
 
-export default Coupon
+module.exports = Coupon

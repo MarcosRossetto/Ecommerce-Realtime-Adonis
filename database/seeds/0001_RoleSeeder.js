@@ -11,7 +11,6 @@
 */
 
 /** @type {import('@adonisjs/lucid/src/Factory')} */
-const Factory = use('Factory')
 
 const Role = use('Role')
 
@@ -37,4 +36,4 @@ class RoleSeeder {
   }
 }
 
-export default RoleSeeder
+module.exports = RoleSeeder

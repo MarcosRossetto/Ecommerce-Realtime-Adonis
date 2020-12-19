@@ -21,4 +21,4 @@ class Product extends Model {
   }
 }
 
-export default Product
+module.exports = Product

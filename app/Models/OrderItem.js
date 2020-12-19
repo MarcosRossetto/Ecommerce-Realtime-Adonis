@@ -22,4 +22,4 @@ class OrderItem extends Model {
   }
 }
 
-export default OrderItem
+module.exports = OrderItem

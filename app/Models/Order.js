@@ -28,4 +28,4 @@ class Order extends Model {
   }
 }
 
-export default Order
+module.exports = Order

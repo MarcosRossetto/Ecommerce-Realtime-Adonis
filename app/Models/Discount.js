@@ -17,4 +17,4 @@ class Discount extends Model {
   }
 }
 
-export default Discount
+module.exports = Discount

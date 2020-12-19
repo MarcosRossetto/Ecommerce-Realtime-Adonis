@@ -14,4 +14,4 @@ class Image extends Model {
   }
 }
 
-export default Image
+module.exports = Image
