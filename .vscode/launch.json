@@ -9,7 +9,7 @@
       "request": "launch",
       "name": "Debug",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["npm", "dev"],
+      "runtimeArgs": ["run", "dev"],
       "port": 9229,
       "internalConsoleOptions": "neverOpen"
     }
