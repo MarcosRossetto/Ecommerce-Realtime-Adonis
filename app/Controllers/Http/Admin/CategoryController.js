@@ -72,10 +72,16 @@ class CategoryController {
    */
   async update({ params: { id }, request, response }) {
     const category = await Category.findOrFail(id)
-    const { title, description, image_id } = request.all()
-    category.merge({ title, description, image_id })
-    await category.save()
-    return response.send(category)
+    try {
+      const { title, description, image_id } = request.all()
+      category.merge({ title, description, image_id })
+      await category.save()
+      return response.send(category)
+    } catch (error) {
+      return response.status(400).send({
+        message: 'Não foi possível atualizar essa categoria.',
+      })
+    }
   }
 
   /**
