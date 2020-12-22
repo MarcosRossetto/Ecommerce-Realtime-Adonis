@@ -5,6 +5,7 @@
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 const Order = use('App/Models/Order')
 const Database = use('Database')
+const Service = use('App/Services/Order/OrderServices')
 
 /**
  * Resourceful controller for interacting with orders
@@ -44,7 +45,29 @@ class OrderController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async store({ request, response }) {}
+  async store({ request, response }) {
+    const trx = await Database.beginTransaction()
+
+    try {
+      const { userId, items, status } = request.all()
+      let order = await Order.create({ userId, status }, trx)
+
+      const service = new Service(order, trx)
+
+      if (items && items.length > 0) {
+        await service.syncItems(items)
+      }
+
+      await trx.commit()
+
+      return response.status(201).send(order)
+    } catch (error) {
+      await trx.rollback()
+      return response.status(400).send({
+        message: 'Não foi possível criar o pedido.',
+      })
+    }
+  }
 
   /**
    * Display a single order.
@@ -68,7 +91,28 @@ class OrderController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async update({ params, request, response }) {}
+  async update({ params: { id }, request, response }) {
+    const order = await Order.findOrFail(id)
+    const trx = await Database.beginTransaction()
+
+    try {
+      const { userId, items, status } = request.all()
+
+      order.merge({ user_id, status })
+      const service = new Service(order, trx)
+
+      await service.updateItems(items)
+      await order.save(trx)
+      await trx.commit()
+
+      return response.send(order)
+    } catch (error) {
+      await trx.rollback()
+      return response.status(400).send({
+        message: 'Não foi possível atualizar o pedido.',
+      })
+    }
+  }
 
   /**
    * Delete a order with id.
