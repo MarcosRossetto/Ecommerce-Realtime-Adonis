@@ -1,5 +1,7 @@
 'use strict'
 
+const Database = use('Database')
+
 class OrderService {
   constructor(model, trx = null) {
     this.model = model
@@ -37,6 +39,76 @@ class OrderService {
         await item.save(this.trx)
       })
     )
+  }
+
+  async canApplyDiscount(coupon) {
+    const couponProducts = await Database.from('coupon_products')
+      .where('coupon_id', coupon.id)
+      .pluck('product_id')
+
+    const couponCLients = await Database.from('coupon_user')
+      .where('coupon_id', coupon.id)
+      .pluck('user_id')
+
+    if (
+      Array.isArray(couponProducts) &&
+      couponProducts.length < 1 &&
+      Array.isArray(couponCLients) &&
+      couponCLients < 1
+    ) {
+      return true
+    }
+
+    let isAssociatedToProducts,
+      isAssociatedToClients = false
+
+    if (Array.isArray(couponProducts) && couponProducts.length > 0) {
+      isAssociatedToProducts = true
+    }
+
+    if (Array.isArray(couponClients) && couponClients.length > 0) {
+      isAssociatedToClients = true
+    }
+
+    const productsMatch = await Database.from('order_items')
+      .where('order_id', this.model.id)
+      .whereIn('product_id', couponProducts)
+      .pluck('product_id')
+
+    if (isAssociatedToClients && isAssociatedToProducts) {
+      const clientMatch = couponClients.find(
+        client => client === this.model.user_id
+      )
+
+      if (
+        clientMatch &&
+        Array.isArray(productsMatch) &&
+        productsMatch.length > 0
+      ) {
+        return true
+      }
+    }
+
+    if (
+      isAssociatedToProducts &&
+      Array.isArray(productsMatch) &&
+      productsMatch.length > 0
+    ) {
+      return true
+    }
+
+    if (
+      isAssociatedToClients &&
+      Array.isArray(couponCLients) &&
+      couponCLients.length > 0
+    ) {
+      const match = couponCLients.find(client => client === this.model.user_id)
+      if (match) {
+        return true
+      }
+    }
+
+    return false
   }
 }
 
